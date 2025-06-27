@@ -1,7 +1,27 @@
 from fastapi import FastAPI, Request, Response, status
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import httpx
 
+import os # Added import for os module
+
 app = FastAPI()
+
+# Serve static files (for favicon)
+app.mount("/assets", StaticFiles(directory="assets"), name="assets") # Changed mount point and directory to 'assets'
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Manyara Backend! Visit /docs for API documentation."}
+
+@app.get("/favicon.ico")
+async def favicon(): # Updated path to favicon.ico
+    return FileResponse(os.path.join("assets", "favicon.ico"))
+
+# Health check endpoint for Render
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return {"status": "ok"}
 
 # GET endpoint: fetches from a public sample JSON endpoint
 @app.get("/posts")
