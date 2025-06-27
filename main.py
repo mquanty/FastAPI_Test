@@ -8,20 +8,12 @@ import os # Added import for os module
 app = FastAPI()
 
 # Serve static files (for favicon)
-app.mount("/assets", StaticFiles(directory="assets"), name="assets") # Changed mount point and directory to 'assets'
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Manyara Backend! Visit /docs for API documentation."}
 
-@app.get("/favicon.ico")
-async def favicon(): # Updated path to favicon.ico
-    return FileResponse(os.path.join("assets", "favicon.ico"))
-
-# Health check endpoint for Render
-@app.get("/health", status_code=status.HTTP_200_OK)
-async def health_check():
-    return {"status": "ok"}
 
 # GET endpoint: fetches from a public sample JSON endpoint
 @app.get("/posts")
@@ -59,3 +51,25 @@ async def options_items():
 @app.head("/items")
 async def head_items():
     return Response(status_code=status.HTTP_200_OK)
+
+
+
+
+@app.get("/favicon.ico")
+async def favicon(): # Updated path to favicon.ico
+    return FileResponse(os.path.join("assets", "favicon.ico"))
+
+# MISCELLANEOUS ENDPOINTS
+# HEAD endpoint for root
+@app.head("/")
+async def head_root():
+    return Response(status_code=status.HTTP_200_OK)
+
+@app.head("/health")
+async def head_health():
+    return Response(status_code=status.HTTP_200_OK)
+
+# Health check endpoint for Render
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return {"status": "ok"}
